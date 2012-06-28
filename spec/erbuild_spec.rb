@@ -9,7 +9,7 @@ describe 'basic operation' do
     out = 'spec/tmp/' + file_name
     expected = 'spec/expected/' + file_name
     File.exist?(out).should be_false
-    cmd = 'bin/...erb ' + out
+    cmd = 'bin/erbuild ' + out
     system(cmd) or fail "\`#{cmd}\` failed."
     actual_data = File.read(out)
     if ENV['snapshot']
