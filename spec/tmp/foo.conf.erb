@@ -1,0 +1,12 @@
+# Some config file.
+
+things {
+  <% config['things'].each do |thing| %>
+    {
+      name: <%= thing['name'] %>
+      options: <%= thing['options'] %>
+    }
+  <% end %>
+}
+
+# …and so forth.
