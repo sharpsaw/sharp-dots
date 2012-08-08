@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+## Preprocess a file using ERb (possibly loading a .yml), then use diffycp to safely copy it into place.
 # License info:
 # Cloned from https://github.com/mattly/nginx_config_generator/blob/9057034a496fb12bce495c91e7cd6b0d9439cd4b/LICENSE
 # Many changes since.
@@ -16,4 +17,5 @@ if File.exists? name+'.yml'
 end
 input_erb = File.read name+'.erb'
 processed = ERB.new(input_erb, nil, '%<>').result binding
-open(name, 'w+').write(processed)
+open(name+'.tmp', 'w+').write processed
+system 'diffycp', name+'.tmp', name

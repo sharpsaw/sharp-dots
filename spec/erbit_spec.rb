@@ -9,7 +9,7 @@ describe 'basic operation' do
     out = 'spec/tmp/' + file_name
     expected = 'spec/expected/' + file_name
     File.exist?(out).should be_false
-    cmd = 'bin/erbuild ' + out
+    cmd = 'bin/erbit ' + out
     system(cmd) or fail "\`#{cmd}\` failed."
     actual_data = File.read(out)
     if ENV['snapshot']
@@ -23,6 +23,6 @@ describe 'basic operation' do
   it 'should work with .yml' do run_for 'foo.conf' end
   it 'should work without .yml' do run_for 'noyaml.conf' end
 
-  # TODO better output on ERb parse failure. Make it look like ...erb knows
+  # TODO better output on ERb parse failure. Make it look like erbit knows
   # what happened rather than got lambasted (or errored itself)
 end
