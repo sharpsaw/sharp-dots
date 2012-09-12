@@ -11,7 +11,7 @@ if File.exists? dest
     print "#{src} and #{dest} are the same."
     exit 0
   else
-    system 'diff', '-u', src, dest
+    system 'diff', '-u', dest, src
     print "OK to overwrite #{dest} with #{src} anyway (y/n)? "
     answer = $stdin.readline.strip.downcase
     if 'y' != answer

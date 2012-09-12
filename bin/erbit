@@ -1,21 +1,27 @@
 #!/usr/bin/env ruby
-## Preprocess a file using ERb (possibly loading a .yml), then use diffycp to safely copy it into place.
-# License info:
-# Cloned from https://github.com/mattly/nginx_config_generator/blob/9057034a496fb12bce495c91e7cd6b0d9439cd4b/LICENSE
-# Many changes since.
+## Preprocess files using ERb (possibly loading a .yml), then use diffycp to safely copy it into place.
 
 require 'erb'
 require 'yaml'
 
-name = ARGV[0]
-fail "Needs a config name." unless name
-fail "Use the config name without .erb or .yml (was: #{name})" if name.match /\.(erb|ya?ml)/
-if File.exists? name+'.yml'
-  input_yaml = File.read name+'.yml'
-  even_the_yaml_is_erb = ERB.new(input_yaml).result
-  config = YAML.load even_the_yaml_is_erb
+file_names = ARGV.size ? ARGV : Dir['*.erb']
+file_names.each do |name|
+  name = ARGV[0].dup
+  fail "Needs a config name." unless name
+  name.sub! '.erb', ''
+  if File.exists? name+'.yml'
+    input_yaml = File.read name+'.yml'
+    even_the_yaml_is_erb = ERB.new(input_yaml).result
+    config = YAML.load even_the_yaml_is_erb
+  end
+  input_erb = File.read name+'.erb'
+  processed = ERB.new(input_erb, nil, '%<>').result binding
+  name_tmp = name+'.tmp'
+  open(name_tmp, 'w+') do |f|
+    f.write processed
+  end
+
+  safely_slide_into_place = [ 'diffycp', name_tmp, name ]
+  system *safely_slide_into_place or fail safely_slide_into_place.join ' '
+  File.unlink name_tmp
 end
-input_erb = File.read name+'.erb'
-processed = ERB.new(input_erb, nil, '%<>').result binding
-open(name+'.tmp', 'w+').write processed
-system 'diffycp', name+'.tmp', name
