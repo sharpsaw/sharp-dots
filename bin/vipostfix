@@ -1,0 +1,7 @@
+#!/bin/sh -xe
+## Edit postfix configs then reload. (:cq from vim to cancel)
+sudo ${VISUAL:-${EDITOR:-vi}} /etc/postfix/
+if [ -e /etc/postfix/virtual ]; then
+    sudo postmap /etc/postfix/virtual
+fi
+sudo postfix reload

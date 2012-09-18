@@ -1,0 +1,4 @@
+#!/bin/sh -xe
+## Edit then reload, for nginx.conf
+: Remember :cq from vim, if you want to short-circuit the reload.
+sudoedit /etc/nginx/nginx.conf && sudo nginx -s reload
